@@ -1,4 +1,4 @@
-package access_token
+package token
 
 import (
 	"testing"
@@ -14,7 +14,7 @@ func TestAccessTokenConstants(t *testing.T) {
 func TestGetAccessToken(t *testing.T) {
 	at := GetAccessToken()
 	assert.False(t, at.IsExpired(), "new access token should not be expired")
-	assert.EqualValues(t, "", at.Token, "new access token should not have valid id")
+	assert.EqualValues(t, "", at.AccessToken, "new access token should not have valid id")
 	assert.True(t, at.Subject == 0, "new access token should not have a subject associated")
 }
 

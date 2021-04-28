@@ -1,16 +1,18 @@
-package access_token
+package token
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	expirationTime = 24
 )
 
 type AccessToken struct {
-	Token    string `json:"access_token"`
-	ClientId int64  `json:"client_id"`
-	Expires  int64  `json:"exp"`
-	Subject  int64  `json:"sub"`
+	AccessToken string `json:"access_token"`
+	ClientId    int64  `json:"client_id"`
+	Expires     int64  `json:"exp"`
+	Subject     int64  `json:"sub"`
 }
 
 func GetAccessToken() AccessToken {
