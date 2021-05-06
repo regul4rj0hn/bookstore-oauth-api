@@ -12,5 +12,5 @@ func New() *TokenStore {
 }
 
 func (ts *TokenStore) GetById(string) (*token.AccessToken, *errors.Response) {
-	return nil, nil
+	return nil, errors.InternalServerError("database connection not implemented")
 }

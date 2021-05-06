@@ -15,8 +15,8 @@ func main() {
 	accessTokenHandler := rest.New(accessTokenService)
 
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
 
+	r.Use(middleware.Logger)
 	r.Mount("/oauth/token", accessTokenHandler.TokenRouter())
 
 	http.ListenAndServe(":8080", r)

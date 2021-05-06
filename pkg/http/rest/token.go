@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -29,5 +30,13 @@ func (h *tokenHandler) TokenRouter() *chi.Mux {
 }
 
 func (h *tokenHandler) GetById(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "not implemented", http.StatusNotImplemented)
+	id := chi.URLParam(r, "id")
+
+	tok, err := h.service.GetById(id)
+	if err != nil {
+		http.Error(w, err.Data, err.Status)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tok)
 }
