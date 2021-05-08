@@ -34,7 +34,7 @@ func (h *tokenHandler) GetById(w http.ResponseWriter, r *http.Request) {
 
 	tok, err := h.service.GetById(id)
 	if err != nil {
-		http.Error(w, err.Data, err.Status)
+		http.Error(w, err.Message, err.StatusCode)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

@@ -3,46 +3,53 @@ package errors
 import (
 	"errors"
 	"net/http"
+
+	"github.com/go-chi/render"
 )
 
 type Response struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-	Data    string `json:"data"`
+	StatusCode int    `json:"-"`
+	StatusText string `json:"status"`
+	Message    string `json:"message"`
+}
+
+func (e *Response) Render(w http.ResponseWriter, r *http.Request) error {
+	render.Status(r, e.StatusCode)
+	return nil
 }
 
 func Message(msg string) error {
 	return errors.New(msg)
 }
 
-func BadRequest(data string) *Response {
+func BadRequest(msg string) *Response {
 	return &Response{
-		Message: "bad_request",
-		Status:  http.StatusBadRequest,
-		Data:    data,
+		StatusText: "bad_request",
+		StatusCode: http.StatusBadRequest,
+		Message:    msg,
 	}
 }
 
-func Conflict(data string) *Response {
+func Conflict(msg string) *Response {
 	return &Response{
-		Message: "conflict",
-		Status:  http.StatusConflict,
-		Data:    data,
+		StatusText: "conflict",
+		StatusCode: http.StatusConflict,
+		Message:    msg,
 	}
 }
 
-func InternalServerError(data string) *Response {
+func InternalServerError(msg string) *Response {
 	return &Response{
-		Message: "internal_server_error",
-		Status:  http.StatusInternalServerError,
-		Data:    data,
+		StatusText: "internal_server_error",
+		StatusCode: http.StatusInternalServerError,
+		Message:    msg,
 	}
 }
 
-func NotFound(data string) *Response {
+func NotFound(msg string) *Response {
 	return &Response{
-		Message: "not_found",
-		Status:  http.StatusNotFound,
-		Data:    data,
+		StatusText: "not_found",
+		StatusCode: http.StatusNotFound,
+		Message:    msg,
 	}
 }
