@@ -3,7 +3,7 @@ package token
 import (
 	"strings"
 
-	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/utils/errors"
+	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/domain/errors"
 )
 
 type TokenStore interface {

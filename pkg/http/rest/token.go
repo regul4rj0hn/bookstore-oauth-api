@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/domain/errors"
 	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/domain/token"
-	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/utils/errors"
 )
 
 type TokenService interface {
