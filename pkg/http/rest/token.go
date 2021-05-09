@@ -1,10 +1,10 @@
 package rest
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/domain/errors"
 	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/domain/token"
 )
@@ -17,16 +17,16 @@ type tokenHandler struct {
 	service TokenService
 }
 
-func New(svc TokenService) *tokenHandler {
+func NewTokenHandler(svc TokenService) *tokenHandler {
 	return &tokenHandler{
 		service: svc,
 	}
 }
 
-func (h *tokenHandler) TokenRouter() *chi.Mux {
-	r := chi.NewRouter()
-	r.Get("/{id}", h.GetById)
-	return r
+func (h *tokenHandler) TokenRoutes(router chi.Router) {
+	router.Route("/{id}", func(router chi.Router) {
+		router.Get("/", h.GetById)
+	})
 }
 
 func (h *tokenHandler) GetById(w http.ResponseWriter, r *http.Request) {
@@ -34,9 +34,9 @@ func (h *tokenHandler) GetById(w http.ResponseWriter, r *http.Request) {
 
 	tok, err := h.service.GetById(id)
 	if err != nil {
-		http.Error(w, err.Message, err.StatusCode)
+		render.Render(w, r, err)
+		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(tok)
+	render.Status(r, http.StatusOK)
+	render.Render(w, r, tok)
 }

@@ -7,7 +7,7 @@ import (
 
 type TokenStore struct{}
 
-func New() *TokenStore {
+func NewTokenStore() *TokenStore {
 	return &TokenStore{}
 }
 

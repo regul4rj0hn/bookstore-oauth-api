@@ -14,7 +14,7 @@ type Service struct {
 	Store TokenStore
 }
 
-func New(ts TokenStore) *Service {
+func NewService(ts TokenStore) *Service {
 	return &Service{
 		Store: ts,
 	}

@@ -1,23 +1,26 @@
 package main
 
 import (
+	"log"
+	"net"
 	"net/http"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/domain/token"
 	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/http/rest"
 	"github.com/regul4rj0hn/bookstore-oauth-api/pkg/store/cassandra"
 )
 
 func main() {
-	accessTokenService := token.New(cassandra.New())
-	accessTokenHandler := rest.New(accessTokenService)
+	listener, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		log.Fatalf("Error occurred: %s", err.Error())
+	}
 
-	r := chi.NewRouter()
+	tokenService := token.NewService(cassandra.NewTokenStore())
+	httpHandler := rest.NewHandler(tokenService)
+	server := http.Server{
+		Handler: httpHandler,
+	}
 
-	r.Use(middleware.Logger)
-	r.Mount("/oauth/token", accessTokenHandler.TokenRouter())
-
-	http.ListenAndServe(":8080", r)
+	server.Serve(listener)
 }
