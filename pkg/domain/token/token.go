@@ -1,6 +1,7 @@
 package token
 
 import (
+	"net/http"
 	"time"
 )
 
@@ -23,4 +24,8 @@ func GetAccessToken() AccessToken {
 
 func (at AccessToken) IsExpired() bool {
 	return time.Unix(at.Expires, 0).Before(time.Now().UTC())
+}
+
+func (*AccessToken) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
 }
