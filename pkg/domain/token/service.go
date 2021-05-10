@@ -7,7 +7,9 @@ import (
 )
 
 type TokenStore interface {
+	Create(AccessToken) *errors.Response
 	GetById(string) (*AccessToken, *errors.Response)
+	UpdateExpiration(AccessToken) *errors.Response
 }
 
 type Service struct {
@@ -20,6 +22,13 @@ func NewService(ts TokenStore) *Service {
 	}
 }
 
+func (s *Service) Create(at AccessToken) *errors.Response {
+	if err := at.Validate(); err != nil {
+		return err
+	}
+	return s.Store.Create(at)
+}
+
 func (s *Service) GetById(id string) (*AccessToken, *errors.Response) {
 	id = strings.TrimSpace(id)
 	if len(id) == 0 {
@@ -30,4 +39,11 @@ func (s *Service) GetById(id string) (*AccessToken, *errors.Response) {
 		return nil, err
 	}
 	return tok, nil
+}
+
+func (s *Service) UpdateExpiration(at AccessToken) *errors.Response {
+	if err := at.Validate(); err != nil {
+		return err
+	}
+	return s.Store.UpdateExpiration(at)
 }

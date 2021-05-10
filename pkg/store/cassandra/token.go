@@ -8,13 +8,28 @@ import (
 )
 
 const (
-	queryGetAccessToken = "SELECT access_token, client_id, sub, expires FROM tokens WHERE access_token=?;"
+	queryGetAccessToken    = "SELECT access_token, client_id, sub, expires FROM tokens WHERE access_token=?;"
+	queryInsertAccessToken = "INSERT INTO tokens(access_token, client_id, sub, expires) VALUES (?,?,?,?);"
+	queryUpdateExpires     = "UPDATE tokens SET expires=? WHERE access_token=?;"
 )
 
 type TokenStore struct{}
 
 func NewTokenStore() *TokenStore {
 	return &TokenStore{}
+}
+
+func (ts *TokenStore) Create(at token.AccessToken) *errors.Response {
+	session, err := database.GetSession()
+	if err != nil {
+		return errors.InternalServerError(err.Error())
+	}
+	defer session.Close()
+
+	if err := session.Query(queryInsertAccessToken, at.AccessToken, at.ClientId, at.Subject, at.Expires).Exec(); err != nil {
+		return errors.InternalServerError(err.Error())
+	}
+	return nil
 }
 
 func (ts *TokenStore) GetById(id string) (*token.AccessToken, *errors.Response) {
@@ -33,4 +48,17 @@ func (ts *TokenStore) GetById(id string) (*token.AccessToken, *errors.Response) 
 	}
 
 	return &token, nil
+}
+
+func (ts *TokenStore) UpdateExpiration(at token.AccessToken) *errors.Response {
+	session, err := database.GetSession()
+	if err != nil {
+		return errors.InternalServerError(err.Error())
+	}
+	defer session.Close()
+
+	if err := session.Query(queryUpdateExpires, at.Expires, at.AccessToken).Exec(); err != nil {
+		return errors.InternalServerError(err.Error())
+	}
+	return nil
 }

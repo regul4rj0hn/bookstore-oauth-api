@@ -10,7 +10,9 @@ import (
 )
 
 type TokenService interface {
+	Create(token.AccessToken) *errors.Response
 	GetById(string) (*token.AccessToken, *errors.Response)
+	UpdateExpiration(token.AccessToken) *errors.Response
 }
 
 type tokenHandler struct {
