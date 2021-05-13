@@ -46,6 +46,10 @@ func (at AccessToken) Validate() *errors.Response {
 	return nil
 }
 
+func (*AccessToken) Bind(r *http.Request) error {
+	return nil
+}
+
 func (*AccessToken) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
